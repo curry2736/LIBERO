@@ -1,3 +1,4 @@
+import json
 import os
 import numpy as np
 import robosuite as suite
@@ -7,6 +8,7 @@ from robosuite.utils.errors import RandomizationError
 
 import libero.libero.envs.bddl_utils as BDDLUtils
 from libero.libero.envs import *
+from robosuite.controllers import load_composite_controller_config
 
 
 class ControlEnv:
@@ -38,14 +40,14 @@ class ControlEnv:
         camera_segmentations=None,
         renderer="mujoco",
         renderer_config=None,
+        controller_configs_loc=None,
         **kwargs,
     ):
         assert os.path.exists(
             bddl_file_name
         ), f"[error] {bddl_file_name} does not exist!"
 
-        controller_configs = suite.load_controller_config(default_controller=controller)
-
+        controller_configs = load_composite_controller_config(controller=controller_configs_loc, robot=robots)
         problem_info = BDDLUtils.get_problem_info(bddl_file_name)
         # Check if we're using a multi-armed environment and use env_configuration argument if so
 
